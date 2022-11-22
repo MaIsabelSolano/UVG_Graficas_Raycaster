@@ -4,6 +4,7 @@ from math import cos, sin, pi
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GREEN = (0, 0, 200)
 
 colors = [
     (255, 210, 42),
@@ -53,7 +54,8 @@ class Raycaster(object):
                 return d, colors[int(self.map[i][j])]
 
             self.point(x, y, (255, 100, 100))
-            d += 5
+
+            d += 1
 
     def draw_map(self):
         for x in range(0, 500, self.blocksize):
@@ -98,12 +100,12 @@ class Raycaster(object):
 
         # 3D Map
 
-        for i in range(0, density):
-            a = self.player["a"] - self.player["fov"]/2 + self.player["fov"]*i/density
+        for i in range(0, int(self.width/2)):
+            a = self.player["a"] - self.player["fov"]/2 + self.player["fov"]*i/(self.width/2)
             d, c = self.cast_ray(a)
 
             x = int(self.width/2 + i)
-            h = self.width/(d * cos(a - self.player["a"])) * 100
+            h = self.width/(d * cos(a - self.player["a"])) * self.height/8
             
             self.draw_strip(x, h, c)
     
@@ -116,6 +118,8 @@ r.load_map('./map.txt')
 runnig = True
 while runnig:
     screen.fill(BLACK)
+    screen.fill(WHITE, (r.width/2, 0, r.width, r.height/2))
+    screen.fill(GREEN, (r.width/2, r.height, r.width, r.height/2))
 
     r.render()
 
