@@ -56,7 +56,7 @@ class Raycaster(object):
             "x": int(self.blocksize + self.blocksize/2),
             "y": int(self.blocksize + self.blocksize/2),
             "fov": int(pi/3), 
-            "a": int(pi/3)
+            "a": pi/3
         }
 
     def clearZ(self):
@@ -182,20 +182,15 @@ class Raycaster(object):
         #     a = self.player["a"] - self.player["fov"]/2 + self.player["fov"]*i/density
         #     d, c, _ = self.cast_ray(a)
 
-        
-
-        # Division
-        
-        for i in range(0, 500):
-            self.point(499, i)
-            self.point(500, i)
-            self.point(501, i)
 
         # 3D Map
 
         for i in range(0, int(self.width/2)):
             a = self.player["a"] - self.player["fov"]/2 + self.player["fov"]*i/(self.width/2)
             d, c, tx = self.cast_ray(a)
+
+            if d <= 0:
+                0
 
             x = int(self.width/2 + i)
             h = self.width/(d * cos(a - self.player["a"])) * self.height/25
@@ -214,6 +209,13 @@ class Raycaster(object):
         # 3D
         for enemy in enemies:
             self.draw_sprite(enemy)
+
+        # Division
+        
+        for i in range(0, 500):
+            self.point(499, i)
+            self.point(500, i)
+            self.point(501, i)
     
 
 pygame.init()
@@ -238,13 +240,17 @@ while runnig:
 
         if (event.type == pygame.KEYDOWN):
             if event.key == pygame.K_RIGHT:
-                r.player["x"] += 5
+                r.player["x"] -= int(5 * sin(r.player["a"]))
+                r.player["y"] += int(5 * cos(r.player["a"]))
             if event.key == pygame.K_LEFT:
-                r.player["x"] -= 5
+                r.player["x"] += int(5 * sin(r.player["a"]))
+                r.player["y"] -= int(5 * cos(r.player["a"]))
             if event.key == pygame.K_UP:
-                r.player["y"] -= 5
+                r.player["x"] += int(5 * cos(r.player["a"]))
+                r.player["y"] += int(5 * sin(r.player["a"]))
             if event.key == pygame.K_DOWN:
-                r.player["y"] += 5
+                r.player["x"] -= int(5 * cos(r.player["a"]))
+                r.player["y"] -= int(5 * sin(r.player["a"]))
 
             if event.key == pygame.K_a:
                 r.player["a"] -= pi/10
