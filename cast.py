@@ -7,6 +7,8 @@ WHITE = (255, 255, 255)
 GRAY = (100, 100, 100)
 GREEN = (0, 0, 200)
 TRANSPARENT = (152, 0, 136, 255)
+SKY = (121, 239, 243)
+GRASS = (90, 193, 103)
 
 colors = [
     (255, 210, 42),
@@ -25,22 +27,37 @@ walls = {
 }
 
 sprites = {
-    "0": pygame.image.load('./materials/sprite1.png'),
-    "1": pygame.image.load('./materials/sprite2.png'),
-    "2": pygame.image.load('./materials/sprite3.png'),
-    "3": pygame.image.load('./materials/sprite4.png'),
+    "cow1": pygame.image.load('./materials/sprite1.png'),
+    "cow2": pygame.image.load('./materials/sprite2.png'),
+    "cow3": pygame.image.load('./materials/sprite3.png'),
+    "chicks1": pygame.image.load('./materials/sprite4.png'),
 }
 
 enemies = [
     {
         "x": 100,
         "y": 100,
-        "sprite": sprites["0"]
+        "sprite": sprites["cow1"]
+    },
+    {
+        "x": 125,
+        "y": 125,
+        "sprite": sprites["cow2"]
     },
     {
         "x": 400,
         "y": 100,
-        "sprite": sprites["1"]
+        "sprite": sprites["cow2"]
+    },
+    {
+        "x": 400,
+        "y": 200,
+        "sprite": sprites["cow3"]
+    },
+    {
+        "x": 200,
+        "y": 400,
+        "sprite": sprites["chicks1"]
     },
 
 ]
@@ -204,7 +221,7 @@ class Raycaster(object):
         # Minimap
 
         for enemy in enemies:
-            self.point(enemy["x"], enemy["y"], (0, 0, 200))
+            self.point(enemy["x"], enemy["y"], (0, 0, 250))
 
         # 3D
         for enemy in enemies:
@@ -225,8 +242,8 @@ r.load_map('./map.txt')
 
 runnig = True
 while runnig:
-    screen.fill(BLACK) # floor
-    screen.fill(GRAY, (r.width/2, 0, r.width, r.height/2)) # sky
+    screen.fill(GRASS) # floor
+    screen.fill(SKY, (r.width/2, 0, r.width, r.height/2)) # sky
 
     r.clearZ()
 
