@@ -145,19 +145,18 @@ class Raycaster(object):
             (self.player["y"] - enemy["y"]) **2
             ) **0.5
 
-        sprite_size = int((500 / d) * (500 / 25))
+        sprite_size = int((500 / d) * (500 / 20))
 
         sprite_x = int(
             500 + # offset
             (sprite_a - self.player["a"]) * 500 /self.player["fov"] +
+            (500 / 2) -
             sprite_size/2 #center sprite
             )
         sprite_y = int((self.height / 2) - (sprite_size / 2))
 
         for x in range(sprite_x, sprite_x + sprite_size):
             if 1000 > x > 500: # The enemy is not render over the minimap
-                print(x, d)
-                print(self.zbuffer[x - 500])
                 if self.zbuffer[x - 500] >= d:
                     for y in range(sprite_y, sprite_y + sprite_size):
                         tx = int((x - sprite_x) * png_size / sprite_size)
