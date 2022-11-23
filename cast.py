@@ -4,13 +4,24 @@ from math import cos, sin, pi
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GRAY = (100, 100, 100)
 GREEN = (0, 0, 200)
 
 colors = [
     (255, 210, 42),
     (210, 100, 200),
+    (238, 239, 168),
+    (238, 239, 168),
     (238, 239, 168)
 ]
+
+walls = {
+    "0": pygame.image.load('./materials/wall1.png'),
+    "1": pygame.image.load('./materials/wall2.png'),
+    "2": pygame.image.load('./materials/wall3.png'),
+    "3": pygame.image.load('./materials/wall4.png'),
+    "4": pygame.image.load('./materials/wall5.png')
+}
 
 class Raycaster(object):
     def __init__(self, screen):
@@ -28,9 +39,12 @@ class Raycaster(object):
     def point(self, x, y, c = WHITE):
         self.screen.set_at((x, y), c)
 
-    def block(self, x, y, c = WHITE):
-        for i in range(x, x + self.blocksize + 1):
-            for j in range(y, y + self.blocksize + 1):
+    def block(self, x, y, texture):
+        for i in range(x, x + self.blocksize):
+            for j in range(y, y + self.blocksize):
+                tx = int((i - x) * 128 / self.blocksize)
+                ty = int((j - y) * 128 / self.blocksize)
+                c = texture.get_at((tx, ty))
                 self.point(i, j, c)
 
     def load_map(self, filename):
@@ -51,7 +65,16 @@ class Raycaster(object):
             i = int(y/self.blocksize)
 
             if self.map[i][j] != ' ':
-                return d, colors[int(self.map[i][j])]
+                hitx = x - j * self.blocksize
+                hity = y - i * self.blocksize
+
+                if 1 < hitx < self.blocksize - 1:
+                    maxhit = hitx
+                else:
+                    maxhit = hity
+
+                tx = int(maxhit * 128 / self.blocksize)
+                return d, self.map[i][j], tx
 
             self.point(x, y, (255, 100, 100))
 
@@ -65,16 +88,19 @@ class Raycaster(object):
                 i = int(y/self.blocksize)
 
                 if self.map[i][j] != ' ':
-                    c = colors[int(self.map[i][j])]
+                    c = walls[self.map[i][j]]
                     self.block(x, y, c)
 
-    def draw_strip(self, x, h, c):
+    def draw_strip(self, x, h, c, tx):
         
         start_y = int(self.height/2 - h/2)
         end_y = int(self.height/2 + h/2)
+        alto = end_y - start_y
 
         for y in range(start_y, end_y):
-            self.point(x, y, c)
+            ty = int((y - start_y) * 128 / alto)
+            texture_c = walls[c].get_at((tx, ty))
+            self.point(x, y, texture_c)
 
     def draw_player(self):
         self.point(self.player["x"], self.player["y"])
@@ -89,7 +115,7 @@ class Raycaster(object):
 
         for i in range(0, density):
             a = self.player["a"] - self.player["fov"]/2 + self.player["fov"]*i/density
-            d, c = self.cast_ray(a)
+            d, c, _ = self.cast_ray(a)
 
         # Division
         
@@ -102,12 +128,12 @@ class Raycaster(object):
 
         for i in range(0, int(self.width/2)):
             a = self.player["a"] - self.player["fov"]/2 + self.player["fov"]*i/(self.width/2)
-            d, c = self.cast_ray(a)
+            d, c, tx = self.cast_ray(a)
 
             x = int(self.width/2 + i)
-            h = self.width/(d * cos(a - self.player["a"])) * self.height/8
+            h = self.width/(d * cos(a - self.player["a"])) * self.height/25
             
-            self.draw_strip(x, h, c)
+            self.draw_strip(x, h, c, tx)
     
 
 pygame.init()
@@ -117,9 +143,8 @@ r.load_map('./map.txt')
 
 runnig = True
 while runnig:
-    screen.fill(BLACK)
-    screen.fill(WHITE, (r.width/2, 0, r.width, r.height/2))
-    screen.fill(GREEN, (r.width/2, r.height, r.width, r.height/2))
+    screen.fill(BLACK) # floor
+    screen.fill(GRAY, (r.width/2, 0, r.width, r.height/2)) # sky
 
     r.render()
 
