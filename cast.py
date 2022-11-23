@@ -104,7 +104,7 @@ class Raycaster(object):
                 tx = int(maxhit * 128 / self.blocksize)
                 return d, self.map[i][j], tx
 
-            self.point(x, y, (255, 100, 100))
+            # self.point(x, y, (255, 100, 100))
 
             d += 1
 
@@ -173,8 +173,8 @@ class Raycaster(object):
                             self.point(x, y, c)
 
     def render(self):
-        self.draw_map()
-        self.draw_player()
+        # self.draw_map()
+        # self.draw_player()
 
         density = 100
 
@@ -205,8 +205,8 @@ class Raycaster(object):
 
         # Minimap
 
-        for enemy in enemies:
-            self.point(enemy["x"], enemy["y"], (0, 0, 200))
+        # for enemy in enemies:
+        #     self.point(enemy["x"], enemy["y"], (0, 0, 200))
 
         # 3D
         for enemy in enemies:
