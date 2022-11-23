@@ -2,6 +2,8 @@ import pygame
 import random
 from math import cos, sin, pi, atan2
 
+# layout changed
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (100, 100, 100)
