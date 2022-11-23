@@ -240,6 +240,9 @@ screen = pygame.display.set_mode((1000, 500))
 r = Raycaster(screen)
 r.load_map('./map.txt')
 
+bubblegum = pygame.mixer.music.load('./materials/Bubblegum.mp3')
+pygame.mixer.music.play()
+
 runnig = True
 while runnig:
     screen.fill(GRASS) # floor
