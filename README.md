@@ -23,4 +23,5 @@ Pantalla inicial
 Pantalla de juego (gameplay)
 ![Screenshot 2022-11-24 010303](https://user-images.githubusercontent.com/60373842/203716145-ac24f0fd-79a4-4ef5-a0e6-5e1c1275f2ff.png)
 
-
+## Tecnologías
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
