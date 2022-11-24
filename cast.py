@@ -280,29 +280,36 @@ title = font_1.render('GRANJA DE POLLITOS Y GALLINAS', True, BLUE)
 textRect1 = title.get_rect()
 textRect1.center = (1000 // 2, 250 // 2)
 
-subtitle = font_2.render('Porque no me dio tiempo de hacer más sprites...', True, BLUE)
+subtitle = font_2.render('Porque no me dio tiempo de hacer más sprites...', True, GRASS)
 textRect2 = subtitle.get_rect()
 textRect2.center = (1000 // 2, 300 // 2)
 
-controls = font_2.render('Controles:', True, BLUE)
+controls = font_2.render('Controles:', True, BLACK)
 textRectc = controls.get_rect()
 textRectc.center = (500, 215)
 
-controls_up = font_2.render('[^] (frente)', True, BLUE)
+controls_up = font_2.render('[^] (frente)', True, BLACK)
 textRect3 = controls_up.get_rect()
 textRect3.center = (500, 250)
 
-controls_iz = font_2.render('[<] (izquierda) | [v] (atrás) |  [>] (derecha)  ', True, BLUE)
+controls_iz = font_2.render('[<] (izquierda) | [v] (atrás) |  [>] (derecha)  ', True, BLACK)
 textRect4 = controls_iz.get_rect()
 textRect4.center = (500, 275)
 
-controls_view = font_2.render('[a] (ver a la izquierda) | [d] (ver a la derecha)', True, BLUE)
+controls_view = font_2.render('[a] (ver a la izquierda) | [d] (ver a la derecha)', True, BLACK)
 textRect5 = controls_view.get_rect()
 textRect5.center = (500, 310)
 
-continue_text = font_3.render('Presiona ESPACIO para continuar...', True, BLUE)
+continue_text = font_3.render('Presiona ESPACIO para continuar...', True, WHITE, (0, 0, 0, 0.5))
 textRect6 = continue_text.get_rect()
 textRect6.center = (500, 450)
+
+# Images / Decoration ?
+fence1 = walls["0"].convert()
+fence2 = walls["1"].convert()
+
+# fps
+clock = pygame.time.Clock()
 
 while running:
 
@@ -310,7 +317,14 @@ while running:
         screen.fill(BLACK)
         display_surface.fill(SKY)
 
-        # Text
+        # Decoration (fence)
+
+        for dec in range(0, 1000, 256):
+            screen.blit(fence1, (dec, 375))
+            screen.blit(fence2, (dec + 128, 375))
+
+
+        # Text display
         display_surface.blit(title, textRect1)
         display_surface.blit(subtitle, textRect2)
         display_surface.blit(controls, textRectc)
@@ -337,6 +351,12 @@ while running:
     r.clearZ()
 
     r.render()
+
+    # FPS display
+    time = str(int(clock.get_fps())) + ' FPS'
+    fps_text = font_3.render(time, True, WHITE, BLACK)
+    screen.blit(fps_text, (950, 10))
+    clock.tick(60)
 
     pygame.display.flip()
 
