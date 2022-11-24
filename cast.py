@@ -5,7 +5,8 @@ from math import cos, sin, pi, atan2
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (100, 100, 100)
-GREEN = (0, 0, 200)
+GREEN = (0, 200, 0)
+BLUE = (10, 10, 200)
 TRANSPARENT = (152, 0, 136, 255)
 SKY = (121, 239, 243)
 GRASS = (90, 193, 103)
@@ -55,8 +56,28 @@ enemies = [
         "sprite": sprites["cow3"]
     },
     {
+        "x": 400,
+        "y": 400,
+        "sprite": sprites["cow3"]
+    },
+    {
         "x": 200,
         "y": 400,
+        "sprite": sprites["chicks1"]
+    },
+    {
+        "x": 400,
+        "y": 300,
+        "sprite": sprites["chicks1"]
+    },
+    {
+        "x": 300,
+        "y": 400,
+        "sprite": sprites["chicks1"]
+    },
+    {
+        "x": 250,
+        "y": 250,
         "sprite": sprites["chicks1"]
     },
 
@@ -210,7 +231,7 @@ class Raycaster(object):
                 0
 
             x = int(self.width/2 + i)
-            h = self.width/(d * cos(a - self.player["a"])) * self.height/25
+            h = self.width/((d) * cos(a - self.player["a"])) * self.height/25
             
             if self.zbuffer[i] >= d:
                 self.draw_strip(x, h, c, tx)
@@ -243,8 +264,73 @@ r.load_map('./map.txt')
 bubblegum = pygame.mixer.music.load('./materials/Bubblegum.mp3')
 pygame.mixer.music.play()
 
-runnig = True
-while runnig:
+running = True # Runs the whole "game"
+
+running_menu = True # Runs the menu, initialized outside so it can't appear again
+
+# text
+
+display_surface = pygame.display.set_mode((1000, 500))
+pygame.display.set_caption('Show text')
+font_1 = pygame.font.Font('./materials/SuperMario256.ttf', 40)
+font_2 = pygame.font.Font('freesansbold.ttf', 20)
+font_3 = pygame.font.Font('freesansbold.ttf', 15)
+
+title = font_1.render('GRANJA DE POLLITOS Y GALLINAS', True, BLUE)
+textRect1 = title.get_rect()
+textRect1.center = (1000 // 2, 250 // 2)
+
+subtitle = font_2.render('Porque no me dio tiempo de hacer más sprites...', True, BLUE)
+textRect2 = subtitle.get_rect()
+textRect2.center = (1000 // 2, 300 // 2)
+
+controls = font_2.render('Controles:', True, BLUE)
+textRectc = controls.get_rect()
+textRectc.center = (500, 215)
+
+controls_up = font_2.render('[^] (frente)', True, BLUE)
+textRect3 = controls_up.get_rect()
+textRect3.center = (500, 250)
+
+controls_iz = font_2.render('[<] (izquierda) | [v] (atrás) |  [>] (derecha)  ', True, BLUE)
+textRect4 = controls_iz.get_rect()
+textRect4.center = (500, 275)
+
+controls_view = font_2.render('[a] (ver a la izquierda) | [d] (ver a la derecha)', True, BLUE)
+textRect5 = controls_view.get_rect()
+textRect5.center = (500, 310)
+
+continue_text = font_3.render('Presiona ESPACIO para continuar...', True, BLUE)
+textRect6 = continue_text.get_rect()
+textRect6.center = (500, 450)
+
+while running:
+
+    while (running_menu):
+        screen.fill(BLACK)
+        display_surface.fill(SKY)
+
+        # Text
+        display_surface.blit(title, textRect1)
+        display_surface.blit(subtitle, textRect2)
+        display_surface.blit(controls, textRectc)
+        display_surface.blit(controls_up, textRect3)
+        display_surface.blit(controls_iz, textRect4)
+        display_surface.blit(controls_view, textRect5)
+        display_surface.blit(continue_text, textRect6)
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if (event.type == pygame.QUIT):
+                running = False
+                running_menu = False
+
+            if (event.type == pygame.KEYDOWN):
+                if event.key == pygame.K_SPACE:
+                    # Leaves menu and into the "game"
+                    running_menu = False
+
     screen.fill(GRASS) # floor
     screen.fill(SKY, (r.width/2, 0, r.width, r.height/2)) # sky
 
@@ -256,9 +342,12 @@ while runnig:
 
     for event in pygame.event.get():
         if (event.type == pygame.QUIT):
-            runnig = False
+            running = False
 
         if (event.type == pygame.KEYDOWN):
+            if event.key == pygame.K_ESCAPE:
+                running = False
+
             if event.key == pygame.K_RIGHT:
                 r.player["x"] -= int(5 * sin(r.player["a"]))
                 r.player["y"] += int(5 * cos(r.player["a"]))
