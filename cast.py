@@ -61,6 +61,11 @@ enemies = [
         "sprite": sprites["cow3"]
     },
     {
+        "x": 100,
+        "y": 250,
+        "sprite": sprites["cow3"]
+    },
+    {
         "x": 200,
         "y": 400,
         "sprite": sprites["chicks1"]
@@ -227,11 +232,9 @@ class Raycaster(object):
             a = self.player["a"] - self.player["fov"]/2 + self.player["fov"]*i/(self.width/2)
             d, c, tx = self.cast_ray(a)
 
-            if d <= 0:
-                0
-
             x = int(self.width/2 + i)
             h = self.width/((d) * cos(a - self.player["a"])) * self.height/25
+            
             
             if self.zbuffer[i] >= d:
                 self.draw_strip(x, h, c, tx)
@@ -351,7 +354,13 @@ while running:
     r.clearZ()
 
     # render both maps
-    r.render()
+    # pp = (r.player["x"], r.player["y"]) # Player position
+    try:
+        r.render()
+
+    except ZeroDivisionError:
+        r.player["x"] = int(r.blocksize + r.blocksize/2)
+        r.player["y"] = int(r.blocksize + r.blocksize/2)
 
     # FPS display
     time = str(int(clock.get_fps())) + ' FPS'
@@ -369,6 +378,12 @@ while running:
         if (event.type == pygame.KEYDOWN):
             if event.key == pygame.K_ESCAPE:
                 running = False
+
+            if event.key == pygame.K_a:
+                r.player["a"] -= pi/20
+
+            if event.key == pygame.K_d:
+                r.player["a"] += pi/20
 
         keys = pygame.key.get_pressed()
 
@@ -388,8 +403,8 @@ while running:
             r.player["x"] -= int(5 * cos(r.player["a"]))
             r.player["y"] -= int(5 * sin(r.player["a"]))
 
-        if keys[pygame.K_a]:
-            r.player["a"] -= pi/20
+        # if keys[pygame.K_a]:
+        #     r.player["a"] -= pi/20
 
-        if keys[pygame.K_d]:
-            r.player["a"] += pi/20
+        # if keys[pygame.K_d]:
+        #     r.player["a"] += pi/20
