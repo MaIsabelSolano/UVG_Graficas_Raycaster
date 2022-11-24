@@ -314,7 +314,6 @@ clock = pygame.time.Clock()
 while running:
 
     while (running_menu):
-        screen.fill(BLACK)
         display_surface.fill(SKY)
 
         # Decoration (fence)
@@ -348,8 +347,10 @@ while running:
     screen.fill(GRASS) # floor
     screen.fill(SKY, (r.width/2, 0, r.width, r.height/2)) # sky
 
+    # crear ZBuffer
     r.clearZ()
 
+    # render both maps
     r.render()
 
     # FPS display
@@ -358,6 +359,7 @@ while running:
     screen.blit(fps_text, (950, 10))
     clock.tick(60)
 
+    # refresh screen
     pygame.display.flip()
 
     for event in pygame.event.get():
@@ -368,20 +370,26 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
 
-            if event.key == pygame.K_RIGHT:
-                r.player["x"] -= int(5 * sin(r.player["a"]))
-                r.player["y"] += int(5 * cos(r.player["a"]))
-            if event.key == pygame.K_LEFT:
-                r.player["x"] += int(5 * sin(r.player["a"]))
-                r.player["y"] -= int(5 * cos(r.player["a"]))
-            if event.key == pygame.K_UP:
-                r.player["x"] += int(5 * cos(r.player["a"]))
-                r.player["y"] += int(5 * sin(r.player["a"]))
-            if event.key == pygame.K_DOWN:
-                r.player["x"] -= int(5 * cos(r.player["a"]))
-                r.player["y"] -= int(5 * sin(r.player["a"]))
+        keys = pygame.key.get_pressed()
 
-            if event.key == pygame.K_a:
-                r.player["a"] -= pi/10
-            if event.key == pygame.K_d:
-                r.player["a"] += pi/10
+        if keys[pygame.K_RIGHT]:
+            r.player["x"] -= int(5 * sin(r.player["a"]))
+            r.player["y"] += int(5 * cos(r.player["a"]))
+
+        if keys[pygame.K_LEFT]:
+            r.player["x"] += int(5 * sin(r.player["a"]))
+            r.player["y"] -= int(5 * cos(r.player["a"]))
+
+        if keys[pygame.K_UP]:
+            r.player["x"] += int(5 * cos(r.player["a"]))
+            r.player["y"] += int(5 * sin(r.player["a"]))
+
+        if keys[pygame.K_DOWN]:
+            r.player["x"] -= int(5 * cos(r.player["a"]))
+            r.player["y"] -= int(5 * sin(r.player["a"]))
+
+        if keys[pygame.K_a]:
+            r.player["a"] -= pi/20
+
+        if keys[pygame.K_d]:
+            r.player["a"] += pi/20
